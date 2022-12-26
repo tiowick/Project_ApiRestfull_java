@@ -1,5 +1,6 @@
 package com.jefersonteste.demoteste.Services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,10 @@ public class TaskService {
             "Tarefa não encontrada! Id: " + id + ", Tipo: " + Task.class.getName()
         ));
 
-    
+    }
+    public List<Task> findAllByUserId(Long userId){
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional
