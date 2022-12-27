@@ -1,7 +1,5 @@
 package com.jefersonteste.demoteste.models;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +12,19 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = Task.TABLE_NAME)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Task {
     
     public static final String TABLE_NAME = "task";
@@ -36,7 +45,7 @@ public class Task {
     private String description;
        
 
-
+  /* 
     public Task() {
     }
 
@@ -113,4 +122,5 @@ public class Task {
     
 
     }
+    */
 }
