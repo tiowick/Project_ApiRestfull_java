@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jefersonteste.demoteste.Repositories.TaskRepository;
+import com.jefersonteste.demoteste.Services.exceptions.DataBindingViolationException;
+import com.jefersonteste.demoteste.Services.exceptions.ObjectNotFoundException;
 import com.jefersonteste.demoteste.models.Task;
 import com.jefersonteste.demoteste.models.User;
 
@@ -20,28 +22,28 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
-    public Task findByTask(Long id){
-        
+    public Task findByTask(Long id) {
+
         Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new RuntimeException(
-            "Tarefa não encontrada! Id: " + id + ", Tipo: " + Task.class.getName()
-        ));
+        return task.orElseThrow(() -> new ObjectNotFoundException(
+                "Tarefa não encontrada! Id: " + id + ", Tipo: " + Task.class.getName()));
 
     }
-    public List<Task> findAllByUserId(Long userId){
+
+    public List<Task> findAllByUserId(Long userId) {
         List<Task> tasks = this.taskRepository.findByUser_Id(userId);
         return tasks;
     }
 
     @Transactional
-    public Task create(Task obj){
+    public Task create(Task obj) {
         User user = this.userService.findById(obj.getUser().getId());
 
         obj.setId(null);
         obj.setUser(user);
         obj = this.taskRepository.save(obj);
         return obj;
-        
+
     }
 
     public Task update(Task obj) {
@@ -49,15 +51,14 @@ public class TaskService {
         newObjt.setDescription(obj.getDescription());
         return this.taskRepository.save(newObjt);
     }
-    
-    public void delete(Long id){
+
+    public void delete(Long id) {
         findByTask(id);
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possivel excluir pois há entidades relacionadas!");
+            throw new DataBindingViolationException("Não é possivel excluir pois há entidades relacionadas!");
         }
     }
-
 
 }
