@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.jefersonteste.demoteste.Security.JWTAutenticationFilter;
 import com.jefersonteste.demoteste.Security.JWTUtil;
 
 @Configuration
@@ -43,6 +44,7 @@ public class SecurityConfig {
         "/login"
     };
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
@@ -57,8 +59,10 @@ public class SecurityConfig {
         http.authorizeRequests()
             .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
             .antMatchers(PUBLIC_MATCHERS).permitAll()
-            .anyRequest().authenticated();
-            //.authenticationManager(authenticationManager);
+            .anyRequest().authenticated().and()
+            .authenticationManager(authenticationManager);
+
+        http.addFilter(new JWTAutenticationFilter(this.authenticationManager, this.jwtUtil));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
