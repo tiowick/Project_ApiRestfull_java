@@ -1,5 +1,6 @@
 package com.jefersonteste.demoteste.Security;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jefersonteste.demoteste.exceptions.GlobalExceptionHandler;
 import com.jefersonteste.demoteste.models.User;
 
-import io.jsonwebtoken.io.IOException;
+
 
 public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter{
 
@@ -42,8 +43,8 @@ public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter
             Authentication authentication = this.authenticationManager.authenticate(authToken);
             return authentication;
             
-        } catch (Exception e) {
-            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
