@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jefersonteste.demoteste.Repositories.UserRepository;
+import com.jefersonteste.demoteste.Security.UserSpringSecurity;
 import com.jefersonteste.demoteste.Services.exceptions.DataBindingViolationException;
 import com.jefersonteste.demoteste.Services.exceptions.ObjectNotFoundException;
 import com.jefersonteste.demoteste.models.User;
@@ -69,5 +71,13 @@ public class UserService {
             throw new DataBindingViolationException("Não é possivel excluir pois há entidades relacionadas!");
         }
 
+    }
+
+    public static UserSpringSecurity authenticated() {
+        try {
+            return (UserSpringSecurity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
