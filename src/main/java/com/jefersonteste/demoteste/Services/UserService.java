@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +18,8 @@ import com.jefersonteste.demoteste.Security.UserSpringSecurity;
 import com.jefersonteste.demoteste.Services.exceptions.DataBindingViolationException;
 import com.jefersonteste.demoteste.Services.exceptions.ObjectNotFoundException;
 import com.jefersonteste.demoteste.models.User;
+import com.jefersonteste.demoteste.models.dto.UserCreateDTO;
+import com.jefersonteste.demoteste.models.dto.UserUpdateDTO;
 import com.jefersonteste.demoteste.models.enums.ProfileEnum;
 
 @Service
@@ -80,4 +84,18 @@ public class UserService {
             return null;
         }
     }
+
+    public User fromDTO(@Valid UserCreateDTO obj){
+        User user = new User();
+        user.setUsername(obj.getUsername());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+    public User fromDTO(@Valid UserUpdateDTO obj) {
+        User user = new User();
+        user.setId(obj.getId());
+        user.setPassword(obj.getPassword());
+        return user;
+    }
+    
 }

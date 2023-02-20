@@ -19,8 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.jefersonteste.demoteste.Services.UserService;
 import com.jefersonteste.demoteste.models.User;
-import com.jefersonteste.demoteste.models.User.CreateUser;
-import com.jefersonteste.demoteste.models.User.UpdateUser;
+import com.jefersonteste.demoteste.models.dto.UserCreateDTO;
+import com.jefersonteste.demoteste.models.dto.UserUpdateDTO;
 
 @RestController
 @RequestMapping("/user")
@@ -42,19 +42,19 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj){
-        this.userService.create(obj);
+    public ResponseEntity<Void> create(@Valid @RequestBody UserCreateDTO obj){
+       User user = this.userService.fromDTO(obj);
+        User newUser = this.userService.create(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}").buildAndExpand(obj.getId()).toUri();
+            .path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@Validated @RequestBody User obj, @PathVariable Long id){
+    public ResponseEntity<Void> update(@Validated @RequestBody UserUpdateDTO obj, @PathVariable Long id){
         obj.setId(id);
-        obj = this.userService.update(obj);
+        User user = this.userService.fromDTO(obj);
+        this.userService.update(user);
         return ResponseEntity.noContent().build();
     }
         

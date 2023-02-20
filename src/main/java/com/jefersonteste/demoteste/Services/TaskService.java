@@ -15,6 +15,7 @@ import com.jefersonteste.demoteste.Services.exceptions.ObjectNotFoundException;
 import com.jefersonteste.demoteste.models.Task;
 import com.jefersonteste.demoteste.models.User;
 import com.jefersonteste.demoteste.models.enums.ProfileEnum;
+import com.jefersonteste.demoteste.models.projection.TaskProjection;
 
 @Service
 public class TaskService {
@@ -25,35 +26,35 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
-    public Task findByTask(Long id) {
+    public Task findById(Long id) {
 
         Task task = this.taskRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
             "Tarefa não encontrada! Id: " + id + ", Tipo: " + Task.class.getName()));
 
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
         if(Objects.isNull(userSpringSecurity) 
-                || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !userHasTask(userSpringSecurity, task)){
+                || !userSpringSecurity.hasRole(ProfileEnum.ADMIN) && !userHasTask(userSpringSecurity, task))
             throw new AuthorizationException("Acesso negado!");
-        }
+        
         return task;
 
     }
 
-    public List<Task> findAllByUser() {
+    public List<TaskProjection> findAllByUser() {
         UserSpringSecurity userSpringSecurity = UserService.authenticated();
-        if(Objects.isNull(userSpringSecurity)){
+        if(Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Acesso negado!");
-        }
-        List<Task> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
+        
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
         return tasks;
     }
 
     @Transactional
     public Task create(Task obj) {
-            UserSpringSecurity userSpringSecurity = UserService.authenticated();
-            if(Objects.isNull(userSpringSecurity)){
-                throw new AuthorizationException("Acesso negado!");
-            }
+        UserSpringSecurity userSpringSecurity = UserService.authenticated();
+        if(Objects.isNull(userSpringSecurity))
+            throw new AuthorizationException("Acesso negado!");
+            
         User user = this.userService.findById(userSpringSecurity.getId()); //obj.getUser().getId()
 
         obj.setId(null);
@@ -64,13 +65,13 @@ public class TaskService {
     }
 
     public Task update(Task obj) {
-        Task newObjt = findByTask(obj.getId());
+        Task newObjt = findById(obj.getId());
         newObjt.setDescription(obj.getDescription());
         return this.taskRepository.save(newObjt);
     }
 
     public void delete(Long id) {
-        findByTask(id);
+        findById(id);
         try {
             this.taskRepository.deleteById(id);
         } catch (Exception e) {

@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.jefersonteste.demoteste.models.Task;
+import com.jefersonteste.demoteste.models.projection.TaskProjection;
 
 public interface TaskRepository extends JpaRepository<Task, Long>{
     
-    List<Task> findByUser_Id(Long id);
+    List<TaskProjection> findByUser_Id(Long id);
 
     // @Query(value = "SELECT t FROM Task t WHERE t.user.id = :id")
     // List<Task> findByUser_Id(@Param("id") Long id);

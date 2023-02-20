@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.jefersonteste.demoteste.Services.TaskService;
 import com.jefersonteste.demoteste.models.Task;
+import com.jefersonteste.demoteste.models.projection.TaskProjection;
 
 @RestController
 @RequestMapping("/task")
@@ -32,14 +33,14 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> findbyId(@PathVariable Long id){
-        Task obj = this.taskService.findByTask(id);
+        Task obj = this.taskService.findById(id);
         return ResponseEntity.ok(obj);
 
     }
     @GetMapping("/user")
-    public ResponseEntity<List<Task>> findAllByUser(){
+    public ResponseEntity<List<TaskProjection>> findAllByUser(){
         //this.userService.findById();   
-        List<Task> objs = this.taskService.findAllByUser();
+        List<TaskProjection> objs = this.taskService.findAllByUser();
         return ResponseEntity.ok().body(objs);
     }
 
